@@ -19,7 +19,6 @@ pub struct Phi<P:Pairing>{
     pub f_gamma: P::ScalarField,
     pub com1_h: P::G1,
     pub com1_a0: P::G1,
-// 
  }
 
 impl<P:Pairing> Phi<P>{
@@ -90,24 +89,8 @@ impl<P:Pairing> Phi<P>{
         a0 += P::ScalarField::from(*m_i) / &(t[*i as usize] + beta) * pre.li_x.get(&(*i as u64)).unwrap()[0];
     }
 
-    // let zero = P::ScalarField::zero();
-    // let b_x = DensePolynomial::from_coefficients_slice(&b_coeff[..]);
-    // let b0 = b_x.evaluate(&zero);
-    // let b_gamma: P::ScalarField = (gamma*b0_gamma) + b0;
-    
     let q_b_x = DensePolynomial::from_coefficients_slice(&qb_coeff[..]); //Tweak
     let q_b_gamma = q_b_x.evaluate(&gamma);
-
-    // let mu: P::ScalarField = b0_gamma + (eta*f_gamma )+ (eta*eta*q_b_gamma);
-    // let b0_evals = fftdomain.fft(&b_coeff[1..]);
-    // let mut h_eval = vec![];
-    //     for i in 0..small_n{
-    //     let den = fftdomain.element(i as usize) - gamma;
-    //     let num = b0_evals[i as usize] + (eta * f[i as usize]) + (eta*eta*qb_eval[i as usize]) -mu;
-    //     h_eval.push(num*(den.inverse().unwrap()));
-    // }
-    // let h_coeff = fftdomain.ifft(&h_eval[..]);
-    // let com1_h = Srs::<P>::commit_g1(&pre.srs.srs_g1, &h_coeff); //return
 
     let com1_h = batch_open_g1::<P>( 
         &pre.srs.srs_g1,
@@ -118,11 +101,7 @@ impl<P:Pairing> Phi<P>{
 
     
     let com1_a0 = Srs::<P>::commit_g1(&pre.srs.srs_g1, &a_coeff[1..]);  //return
-    // let mut com1_a0 = P::G1::zero();  //return
-    // for (i, m_i) in m.iter() {
-    //     com1_a0 += pre.com1_li_0.get(&(*i as u64)).unwrap().mul(P::ScalarField::from(*m_i) / &(t[*i as usize] + beta));
-    // }
-
+ 
     Phi{
         com1_m,
         com1_f,
